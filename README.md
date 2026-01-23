@@ -275,4 +275,4 @@ Give a ⭐ if this project helped you learn about honeypots and cyber deception!
 For questions or collaboration:
 - GitHub: [@vatsalsapovadiya](https://github.com/vatsalsapovadiya)
 - Email: vatsalsapovadiya22@gmail.com
-- LinkedIn: https://www.linkedin.com/in/vatsalsapovadiya/
+- LinkedIn: [@Vatsal Sapovadiya](https://www.linkedin.com/in/vatsalsapovadiya)
