@@ -235,29 +235,11 @@ Screenshots demonstrating the system are available in the `/screenshots` directo
 
 ---
 
-## 🎓 Academic Relevance
-
-This project demonstrates:
-
-- Cyber deception techniques
-- Honeypot deployment and monitoring
-- SOC-style data pipelines
-- Real-time attack analysis
-
-**Suitable for:**
-- Final-year cybersecurity projects
-- SOC / Blue-Team training
-- Academic research demonstrations
-
----
-
 ## 🚀 Future Enhancements
 
-- [ ] Geo-IP attack mapping
 - [ ] Threat scoring & severity levels
 - [ ] SIEM integration
 - [ ] Cloud-based deployment
-- [ ] IDS correlation
 
 ---
 
@@ -278,7 +260,7 @@ For educational and academic use only.
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!  
-Feel free to check the [issues page](https://github.com/<your-username>/honeypot-based-cyber-deception-system/issues).
+Feel free to check the [issues page](https://github.com/<vatsalsapovadiya>/honeypot-based-cyber-deception-system/issues).
 
 ---
 
@@ -291,5 +273,6 @@ Give a ⭐ if this project helped you learn about honeypots and cyber deception!
 ## 📧 Contact
 
 For questions or collaboration:
-- GitHub: [@your-username](https://github.com/your-username)
-- Email: your.email@example.com
+- GitHub: [@vatsalsapovadiya](https://github.com/vatsalsapovadiya)
+- Email: vatsalsapovadiya22@gmail.com
+- LinkedIn: https://www.linkedin.com/in/vatsalsapovadiya/
