@@ -67,7 +67,7 @@ Attacker
 ### 🔹 Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/honeypot-based-cyber-deception-system.git
+git clone https://github.com/vatsalsapovadiya/honeypot-deception-system.git
 cd honeypot-based-cyber-deception-system
 ```
 
