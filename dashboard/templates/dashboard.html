@@ -1,1 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cyber Attack Dashboard</title>
 
+    <!-- Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- 🌍 Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI';
+            background: #0f172a;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 95%;
+            margin: auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        canvas {
+            max-height: 250px;
+        }
+
+        .full-width {
+            grid-column: span 4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #334155;
+            text-align: center;
+        }
+
+        th {
+            background: #334155;
+        }
+
+        .alert {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🚨 Cyber Attack Monitoring Dashboard</h1>
+
+<div class="container">
+
+    <div class="grid">
+
+        <!-- Attack Chart -->
+        <div class="card">
+            <h3>Attack Types</h3>
+            <canvas id="attackChart"></canvas>
+        </div>
+
+        <!-- Top IPs -->
+        <div class="card">
+            <h3>Top Attacker IPs</h3>
+            <canvas id="ipChart"></canvas>
+        </div>
+
+        <!-- Timeline -->
+        <div class="card">
+            <h3>Attack Timeline</h3>
+            <canvas id="timelineChart"></canvas>
+        </div>
+
+        <!-- Alerts -->
+        <div class="card">
+            <h3>🚨 Alerts</h3>
+            <ul id="alerts"></ul>
+        </div>
+
+        <!-- 🌍 MAP -->
+        <div class="card full-width">
+            <h3>🌍 Attacker Map</h3>
+            <div id="map"></div>
+        </div>
+
+        <!-- Latest Attacks Table -->
+        <div class="card full-width">
+            <h3>Latest Attacks</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>IP</th>
+                        <th>Type</th>
+                        <th>User</th>
+                        <th>Endpoint</th>
+                    </tr>
+                </thead>
+                <tbody id="latest"></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let attackChart, ipChart, timelineChart;
+
+// 🌍 MAP INIT
+let map = L.map('map').setView([20, 0], 2);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data © OpenStreetMap'
+}).addTo(map);
+
+let markers = [];
+
+// ----------------------------
+// DASHBOARD DATA
+// ----------------------------
+function updateDashboard() {
+
+    // Attack Chart
+    fetch('/api/attack_counts')
+    .then(res => res.json())
+    .then(data => {
+        let labels = Object.keys(data);
+        let values = Object.values(data);
+
+        if (attackChart) attackChart.destroy();
+
+        attackChart = new Chart(document.getElementById('attackChart'), {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{ data: values }]
+            }
+        });
+    });
+
+    // Top IPs
+    fetch('/api/top_ips')
+    .then(res => res.json())
+    .then(data => {
+        let labels = data.map(d => d.ip);
+        let values = data.map(d => d.count);
+
+        if (ipChart) ipChart.destroy();
+
+        ipChart = new Chart(document.getElementById('ipChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Attempts",
+                    data: values
+                }]
+            }
+        });
+    });
+
+    // Timeline
+    fetch('/api/timeline')
+    .then(res => res.json())
+    .then(data => {
+        let labels = data.map(d => d.date);
+        let values = data.map(d => d.count);
+
+        if (timelineChart) timelineChart.destroy();
+
+        timelineChart = new Chart(document.getElementById('timelineChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Attacks",
+                    data: values
+                }]
+            }
+        });
+    });
+
+    // Alerts
+    fetch('/api/alerts')
+    .then(res => res.json())
+    .then(data => {
+        let alerts = document.getElementById("alerts");
+        alerts.innerHTML = "";
+        data.forEach(d => {
+            alerts.innerHTML += `<li class="alert">⚠ ${d.ip} (${d.count} attempts)</li>`;
+        });
+    });
+
+    // Latest Attacks
+    fetch('/api/latest_attacks')
+    .then(res => res.json())
+    .then(data => {
+        let table = document.getElementById("latest");
+        table.innerHTML = "";
+
+        data.forEach(d => {
+            table.innerHTML += `
+                <tr>
+                    <td>${d.time}</td>
+                    <td>${d.ip}</td>
+                    <td>${d.type}</td>
+                    <td>${d.user}</td>
+                    <td>${d.endpoint}</td>
+                </tr>
+            `;
+        });
+    });
+}
+
+// ----------------------------
+// 🌍 MAP UPDATE
+// ----------------------------
+function updateMap() {
+    fetch('/api/geo')
+    .then(res => res.json())
+    .then(data => {
+
+        // Remove old markers
+        markers.forEach(m => map.removeLayer(m));
+        markers = [];
+
+        data.forEach(d => {
+            let marker = L.marker([d.lat, d.lon])
+                .addTo(map)
+                .bindPopup(
+                    `<b>IP:</b> ${d.ip}<br>
+                     <b>Attacks:</b> ${d.count}<br>
+                     <b>Country:</b> ${d.country}`
+                );
+
+            markers.push(marker);
+        });
+    });
+}
+
+// 🔄 AUTO REFRESH
+setInterval(() => {
+    updateDashboard();
+    updateMap();
+}, 3000);
+
+// First load
+updateDashboard();
+updateMap();
+
+</script>
+
+</body>
+</html>
+     
