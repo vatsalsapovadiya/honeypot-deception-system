@@ -36,8 +36,7 @@ def attack_counts():
         FROM attack_events
         GROUP BY attack_vector
     """)
-    return jsonify(data)
-
+    return jsonify({row[0]: row[1] for row in data})
 
 # -----------------------------
 # API: Top Attacker IPs
@@ -51,8 +50,7 @@ def top_ips():
         ORDER BY COUNT(*) DESC
         LIMIT 5
     """)
-    return jsonify(data)
-
+    return jsonify([{"ip": row[0], "count": row[1]} for row in data])
 
 # -----------------------------
 # API: Attack Timeline (per day)
@@ -60,13 +58,12 @@ def top_ips():
 @app.route("/api/timeline")
 def timeline():
     data = query_db("""
-        SELECT substr(timestamp, 1, 10) AS day, COUNT(*)
+        SELECT substr(timestamp, 1, 10), COUNT(*)
         FROM attack_events
-        GROUP BY day
-        ORDER BY day
+        GROUP BY 1
+        ORDER BY 1
     """)
-    return jsonify(data)
-
+    return jsonify([{"date": row[0], "count": row[1]} for row in data])
 
 # -----------------------------
 # API: Latest Attacks (LIVE)
@@ -79,7 +76,15 @@ def latest_attacks():
         ORDER BY id DESC
         LIMIT 5
     """)
-    return jsonify(data)
+    return jsonify([
+        {
+            "time": row[0],
+            "ip": row[1],
+            "type": row[2],
+            "user": row[3],
+            "endpoint": row[4]
+        } for row in data
+    ])
 
 
 # -----------------------------
@@ -94,8 +99,7 @@ def alerts():
         GROUP BY src_ip
         HAVING COUNT(*) >= 3
     """)
-    return jsonify(data)
-
+    return jsonify([{"ip": row[0], "count": row[1]} for row in data])
 
 # -----------------------------
 # Run the Dashboard
