@@ -1,22 +1,62 @@
 # 🛡️ Honeypot-Based Cyber Deception System
 
-A **SOC-style Honeypot and Cyber Deception System** built for academic research and hands-on cybersecurity learning. This project captures **real attacker behavior** using SSH and Web honeypots, normalizes attack telemetry, and provides a **near real-time monitoring dashboard** similar to Security Operations Centers (SOCs).
+## 📌 Overview
+
+The **Honeypot-Based Cyber Deception System** is a cybersecurity project designed to simulate vulnerable environments and capture real-world attack behavior. It integrates SSH and web-based honeypots with a real-time monitoring dashboard to analyze attacker activities.
+
+This system is built for **educational, research, and demonstration purposes**, showcasing how modern **Security Operations Centers (SOC)** monitor, detect, and analyze cyber threats.
 
 ---
 
-## 📌 Project Highlights
+## 🚀 Key Features
 
-- 🐝 **SSH Honeypot (Cowrie)** - Captures brute-force and SSH interaction attempts
-- 🌐 **Custom Web Honeypot (Flask)** - Credential harvesting simulation
-- 🍯 **Cyber Deception Layer**
-  - Honeytoken credentials
-  - Fake admin, IoT, and backup endpoints
-- 📊 **Live SOC-Style Dashboard**
-  - SSH & Web attack counters
-  - Latest attack feed
-  - Real-time brute-force alerting
-- 🔁 **Automated Log Ingestion Pipeline**
-- 🔒 **Fully isolated, ethical, and safe environment**
+### 🔍 Honeypot Integration
+
+* SSH honeypot using Cowrie
+* Custom web honeypot for login attack simulation
+* Captures attacker credentials, commands, and behavior
+
+### 🔄 Automated Data Pipeline
+
+* Real-time log monitoring
+* Automatic parsing of Cowrie & web logs
+* Continuous insertion into SQLite database
+
+### 📊 Interactive Dashboard
+
+* Real-time attack visualization
+* Attack type distribution (SSH vs Web)
+* Top attacker IP tracking
+* Attack timeline analytics
+
+### 🌍 Geo-Location Tracking
+
+* Maps attacker IPs globally
+* Displays attack origins using live geolocation API
+
+### 🚨 Smart Alert System
+
+* Detects brute-force attempts
+* Severity-based alert triggering
+* Highlights suspicious IP behavior
+
+### 🎯 Threat Severity Classification
+
+* Low, Medium, High threat levels
+* Color-coded visualization in dashboard
+* Severity-based filtering and alerts
+
+### 🔐 Authentication System
+
+* Secure login for dashboard access
+* Session-based authentication
+* Protected API endpoints
+
+### 📄 Report Export
+
+* Export attack data as CSV
+* Generate professional PDF reports
+* Useful for analysis and presentations
 
 ---
 
